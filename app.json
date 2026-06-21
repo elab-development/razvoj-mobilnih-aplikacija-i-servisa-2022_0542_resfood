@@ -1,0 +1,86 @@
+{
+  "expo": {
+    "name": "ResFood",
+    "slug": "resfood",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#2E7D32"
+    },
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.resfood.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "ResFood koristi lokaciju da pronađe restorane u vašoj blizini.",
+        "NSLocationAlwaysUsageDescription": "ResFood koristi lokaciju da pronađe restorane u vašoj blizini.",
+        "NSCameraUsageDescription": "ResFood koristi kameru za fotografisanje hrane i profila.",
+        "NSPhotoLibraryUsageDescription": "ResFood pristupa galeriji za odabir slika.",
+        "NSFaceIDUsageDescription": "ResFood koristi Face ID za brzu prijavu."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#2E7D32"
+      },
+      "package": "com.resfood.app",
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.VIBRATE"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "ResFood koristi lokaciju da pronađe restorane u vašoj blizini."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "ResFood koristi kameru za fotografisanje hrane i profila."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "ResFood pristupa galeriji za odabir slika."
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "ResFood koristi Face ID za brzu prijavu."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#2E7D32"
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a8b32ba2-3a1a-4c1d-8ae3-025a31dc4c2f"
+      }
+    },
+    "owner": "mihailoradulovic711"
+  }
+}
