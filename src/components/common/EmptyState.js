@@ -4,8 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import useTheme from '../../hooks/useTheme';
 
 // Prikazuje se kada lista nema podataka (npr. nema ponuda, nema rezervacija...)
-// Props: icon - naziv Ionicons ikone, title, message
-const EmptyState = ({ icon = 'file-tray-outline', title = 'Nema podataka', message }) => {
+// Props: icon - naziv Ionicons ikone, title, message (ili subtitle kao alias)
+const EmptyState = ({ icon = 'file-tray-outline', title = 'Nema podataka', message, subtitle }) => {
   const { colors } = useTheme();
   const styles = makeStyles(colors);
 
@@ -13,7 +13,7 @@ const EmptyState = ({ icon = 'file-tray-outline', title = 'Nema podataka', messa
     <View style={styles.container}>
       <Ionicons name={icon} size={64} color={colors.grayLight} />
       <Text style={styles.title}>{title}</Text>
-      {message && <Text style={styles.message}>{message}</Text>}
+      {(message || subtitle) && <Text style={styles.message}>{message ?? subtitle}</Text>}
     </View>
   );
 };

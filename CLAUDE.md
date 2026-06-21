@@ -58,7 +58,7 @@ Auth stanje se čuva globalno putem **Context API** (`src/context/AuthContext.js
 | Rezervacije | `screens/buyer/ReservationsScreen.js` | Da |
 | Profil | `screens/buyer/ProfileScreen.js` | Da |
 | Detalj ponude | `screens/buyer/OfferDetailScreen.js` | Ne (otvara se iz Home ili Mape) |
-| Profil restorana | `screens/buyer/RestaurantProfileScreen.js` | Ne (otvara se iz Detalja ponude) |
+| Profil restorana | `screens/buyer/RestaurantProfileScreen.js` | Ne (otvara se iz Detalja ponude ili Mape) |
 
 ### Restaurant ekrani
 | Ekran | Fajl | Navbar |
@@ -113,7 +113,6 @@ ResFood/
 │   │   │   └── EmptyState.js
 │   │   └── cards/                 # Kartice za prikaz podataka
 │   │       ├── OfferCard.js       # Kartica ponude (koristi se na Home i Dashboard)
-│   │       ├── RestaurantCard.js  # Kartica restorana
 │   │       └── ReviewCard.js      # Kartica recenzije
 │   ├── screens/
 │   │   ├── auth/
@@ -125,9 +124,11 @@ ResFood/
 │   │   ├── AuthNavigator.js       # Stack za Login/Register/Splash
 │   │   ├── BuyerNavigator.js      # Tab navigator za kupca
 │   │   ├── RestaurantNavigator.js # Tab navigator za restoran
-│   │   └── AdminNavigator.js      # Tab navigator za admina
+│   │   ├── AdminNavigator.js      # Tab navigator za admina
+│   │   └── navigationRef.js       # Ref za navigaciju van React stabla (notifikacije)
 │   ├── context/
-│   │   └── AuthContext.js         # Globalno auth stanje (korisnik, rola, sesija)
+│   │   ├── AuthContext.js         # Globalno auth stanje (korisnik, rola, sesija)
+│   │   └── ThemeContext.js        # Light/dark tema, distribuira boje kroz app
 │   ├── services/
 │   │   ├── supabase.js            # Supabase klijent (konekcija)
 │   │   ├── authService.js         # Login, register, logout funkcije
@@ -138,8 +139,11 @@ ResFood/
 │   │   └── notificationsService.js
 │   ├── hooks/
 │   │   ├── useAuth.js             # Hook za pristup auth kontekstu
-│   │   ├── useLocation.js         # Hook za geolokaciju
+│   │   ├── useTheme.js            # Hook za pristup theme kontekstu
 │   │   └── useNotifications.js    # Hook za push notifikacije
+│   ├── utils/
+│   │   ├── formatDate.js          # Formatiranje datuma i rokova
+│   │   └── imagePicker.js         # Helper za odabir slike (kamera ili galerija)
 │   └── constants/
 │       └── colors.js              # Paleta boja
 ├── .env                           # Supabase kredencijali (NE commitovati!)
@@ -187,7 +191,7 @@ Svaki ekran koji učitava podatke mora imati:
 
 ### Supabase projekat
 - **Naziv:** ResFood
-- **URL i ključevi:** čuvaju se u `.env` fajlu, učitavaju se u `src/services/supabase.js`
+- **URL i ključevi:** hardkodovani direktno u `src/services/supabase.js` (anon key je javni ključ, bezbedan za klijentski kod)
 
 ### Tabele
 
@@ -199,6 +203,7 @@ Svaki ekran koji učitava podatke mora imati:
 | ime | text | Ime korisnika |
 | telefon | text | Broj telefona |
 | avatar_url | text | URL slike u Supabase Storage |
+| push_token | text | Expo Push Token za notifikacije |
 | created_at | timestamp | Vreme kreiranja |
 
 #### `restaurants`
@@ -263,8 +268,8 @@ Svaki ekran koji učitava podatke mora imati:
 | created_at | timestamp | |
 
 ### Supabase Storage bucketi
-- `avatars` - slike profila korisnika (public)
-- `offers` - slike ponuda restorana (public)
+- `avatars` - slike profila korisnika (`{userId}.jpg`) i slike restorana (`restaurants/{restaurantId}.jpg`) (public)
+- `offers` - slike ponuda (`{restaurantId}/{timestamp}.jpg`) (public)
 
 ### Row Level Security (RLS)
 RLS je uključen na svim tabelama. Detaljne politike su definisane u inicijalnom SQL skriptu. Svaki servisni fajl u `src/services/` komunicira isključivo kroz Supabase klijent koji automatski primenjuje RLS.
@@ -278,7 +283,7 @@ Sva komunikacija sa Supabase-om ide **isključivo kroz `src/services/`** fajlove
 
 | Funkcionalnost | Paket | Koristi se na |
 |---------------|-------|---------------|
-| Geolokacija | `expo-location` | `MapScreen`, `HomeScreen` (sortiranje po blizini) |
+| Geolokacija | `expo-location` | `MapScreen` (GPS pozicija korisnika) |
 | Mape | `react-native-maps` | `MapScreen`, `RestaurantProfileScreen` |
 | Kamera i galerija | `expo-camera`, `expo-image-picker` | `AddEditOfferScreen`, `ProfileScreen` |
 | Biometrijska autentifikacija | `expo-local-authentication` | `LoginScreen` (brza prijava) |

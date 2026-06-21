@@ -206,11 +206,11 @@ const makeStyles = (colors) => StyleSheet.create({
     marginLeft: 12,
   },
   filterScroll: {
-    maxHeight: 48,
     marginBottom: 8,
   },
   filterSadrzaj: {
     paddingHorizontal: 16,
+    paddingVertical: 6,
     gap: 8,
     alignItems: 'center',
   },
